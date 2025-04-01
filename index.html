@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шутка дня</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* Скрываем прокрутку */
+            background-color: #483D8B;
+        }
+
+        .container {
+            text-align: center;
+            position: relative; /* Устанавливаем относительное позиционирование для контейнера */
+            width: 80%; /* Устанавливаем ширину на 80% */
+            height: 80%; /* Устанавливаем высоту на 80% */
+            background-color: #9370DB;
+            border-radius: 12px;
+            overflow: hidden; /* Скрываем элементы, выходящие за пределы контейнера */
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #E6E6FA;
+            color: black;
+            transition: background-color 0.3s;
+            position: absolute; /* Устанавливаем абсолютное позиционирование */
+            left: 50%; /* Центрируем по горизонтали */
+            top: 50%; /* Центрируем по вертикали */
+            transform: translate(-50%, -50%); /* Выравниваем по центру */
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        h1 {
+            color: white;
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 18px;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Получите свою шутку!</h1>
+        <button id="jokeButton">Нажми на меня!</button>
+        <p id="jokeDisplay"></p>
+    </div>
+    <script>
+        const jokeButton = document.getElementById('jokeButton');
+        const jokeDisplay = document.getElementById('jokeDisplay');
+        const container = document.querySelector('.container');
+
+        // Массив шуток
+        const jokes = [
+            'Почему программисты не любят природу? Потому что в ней слишком много багов!',
+            'Какой язык программирования самый оптимистичный? JavaScript, потому что он всегда ждет!',
+            'Почему коты не могут стать программистами? Потому что они всегда игнорируют ошибки!',
+            'Зачем программисту на работу? Чтобы не было времени на отладку!',
+        ];
+
+        // Функция для получения случайной шутки
+        function getRandomJoke() {
+            const randomIndex = Math.floor(Math.random() * jokes.length);
+            return jokes[randomIndex];
+        }
+
+        // Обработчик события для кнопки
+        jokeButton.addEventListener('click', () => {
+            jokeDisplay.textContent = getRandomJoke();
+        });
+
+        // Двигаем кнопку от курсора
+        document.addEventListener('mousemove', (event) => {
+            const buttonRect = jokeButton.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+            const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+
+            const distanceX = buttonCenterX - event.clientX;
+            const distanceY = buttonCenterY - event.clientY;
+
+            // Устанавливаем минимальное расстояние для убегания
+            const minDistance = 50;
+
+            // Если кнопка находилась слишком близко к курсору, перемещаем ее в противоположную сторону
+            if (Math.abs(distanceX) < minDistance && Math.abs(distanceY) < minDistance) {
+                let newX, newY;
+
+                // Генерируем случайные направления для перемещения
+                do {
+                    newX = Math.random() * (containerRect.width - buttonRect.width) + containerRect.left;
+                    newY = Math.random() * (containerRect.height - buttonRect.height) + containerRect.top;
+                } while (
+                    newX > (buttonCenterX - minDistance) && newX < (buttonCenterX + minDistance)
+                    && newY > (buttonCenterY - minDistance) && newY < (buttonCenterY + minDistance)
+                );
+
+                // Устанавливаем новые координаты кнопки
+                jokeButton.style.left = `${newX - containerRect.left}px`; // Корректируем позицию относительно контейнера
+                jokeButton.style.top = `${newY - containerRect.top}px`; // Корректируем позицию относительно контейнера
+                jokeButton.style.transform = 'translate(0, 0)'; // Убираем трансформацию, чтобы сохранить правильное позиционирование
+            }
+        });
+    </script>
+</body>
+
+</html>
